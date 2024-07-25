@@ -1,0 +1,46 @@
+@keyframes createBox {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 200px;
+  max-height: 300px;
+  animation: createBox 0.25s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.card-image {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+}
+
+.card h2 {
+  margin: 0 0 8px 0;
+}
+
+.card p {
+  margin: 4px 0;
+}
+
+.card a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.card a:hover {
+  text-decoration: underline;
+}
