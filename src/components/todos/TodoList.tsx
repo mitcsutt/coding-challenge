@@ -1,10 +1,11 @@
-// This file is fine, no bugs. Just for display purposes
-
 import React, { useState, useEffect } from "react";
+import Modal from "../modal/Modal";
 import "./TodoList.css";
 
 interface TodoListProps {
   initialTodos: string[];
+  open: boolean;
+  onClose: () => void;
 }
 
 const createInitialTodos = (initialTodos: string[]) =>
@@ -17,7 +18,7 @@ const createInitialTodos = (initialTodos: string[]) =>
     };
   });
 
-const TodoList: React.FC<TodoListProps> = ({ initialTodos }) => {
+const TodoList: React.FC<TodoListProps> = ({ initialTodos, open, onClose }) => {
   const [todos, setTodos] = useState(() => createInitialTodos(initialTodos));
 
   useEffect(() => {
@@ -43,20 +44,22 @@ const TodoList: React.FC<TodoListProps> = ({ initialTodos }) => {
   };
 
   return (
-    <div className="todo-list">
-      <h1>ToDo List</h1>
-      <ul>
-        {todos.map((todo) => (
-          <li
-            key={todo.label}
-            className={todo.complete ? "completed" : ""}
-            onClick={() => toggleTodo(todo.label, !todo.complete)}
-          >
-            {todo.label}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <Modal open={open} onClose={onClose}>
+      <div className="todo-list">
+        <h1>ToDo List</h1>
+        <ul>
+          {todos.map((todo) => (
+            <li
+              key={todo.label}
+              className={todo.complete ? "completed" : ""}
+              onClick={() => toggleTodo(todo.label, !todo.complete)}
+            >
+              {todo.label}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Modal>
   );
 };
 

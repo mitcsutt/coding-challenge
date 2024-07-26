@@ -1,6 +1,5 @@
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { fetchUser } from "../../api/users";
-import { queryClient } from "../../config/queryClient";
 import { User } from "../../types/user";
 import { getRandomColor } from "../../utils/color";
 import "./UserCard.css";
@@ -10,16 +9,21 @@ interface CardProps {
 }
 
 const UserCard: React.FC<CardProps> = memo(({ user }) => {
+  const [data, setData] = useState<User | null>(null);
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<null | Error>(null);
+
   useEffect(() => {
-    // Don't change useEffect code, fix error with types only
-    if (user.role === "basic") {
-      queryClient.prefetchQuery({
-        queryKey: ["user", user.managerId],
-        // @ts-expect-error - Fix type error
-        queryFn: () => fetchUser(user.managerId),
-      });
+    if(user.role === 'basic') {
+      setIsPending(true);
+      // @ts-expect-error - We should be able to infer managerId exists as the role is basic
+      fetchUser({ id: user.managerId }).then((user) => {
+        setData(user);
+      }).catch((error) => {
+        setError(error);
+      }).finally(() => setIsPending(false))
     }
-  }, []);
+  }, [user.managerId])
 
   return (
     <div style={{ borderColor: getRandomColor() }} className="card">
@@ -30,14 +34,15 @@ const UserCard: React.FC<CardProps> = memo(({ user }) => {
       />
       <h2>{user.name}</h2>
       <p>
-        <strong>Name:</strong> {user.name}
-      </p>
-      <p>
-        <strong>Age:</strong> {user.age}
-      </p>
-      <p>
         <strong>Email:</strong> {user.email}
       </p>
+      {
+        user.role === 'basic' && (
+          <p>
+            <strong>Manager:</strong> {isPending ? 'Loading...' : error ? error.message : data ? data.name : 'N/A'}
+          </p>
+        )
+      }
       <p>
         <strong>Phone:</strong> {user.phone}
       </p>

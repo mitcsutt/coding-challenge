@@ -1,29 +1,21 @@
-import Grid from "./components/Grid";
-import Search from "./components/Search";
+import Search from "./components/search/Search";
 import Users from "./modules/Users";
-import { QueryClientProvider } from "@tanstack/react-query";
-import "./styles.css";
 import { useState } from "react";
-import TodoList from "./components/TodoList";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { queryClient } from "./config/queryClient";
+import TodoList from "./components/todos/TodoList";
+import "./styles.css";
+import FloatingButton from "./components/button/FloatingButton";
 
 export default function App() {
   const [search, setSearch] = useState<string>("");
+  const [todosOpen, setTodosOpen] = useState(false);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="App">
-        <TodoList initialTodos={todos} />
-        <Search search={search} setSearch={setSearch} />
-        <Users search={search} />
-        <Grid />
-      </div>
-      <ToastContainer />
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <div className="App">
+      <TodoList initialTodos={todos} open={todosOpen} onClose={() => setTodosOpen(false)}/>
+      <Search search={search} setSearch={setSearch} />
+      <Users search={search} />
+      <FloatingButton onClick={() => setTodosOpen(true)} position="bottom-right" >+</FloatingButton>
+    </div>
   );
 }
 

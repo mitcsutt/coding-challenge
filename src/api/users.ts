@@ -1,56 +1,43 @@
 // This file is fine, no bugs in here
 import { User } from "../types/user";
+import Fuse from 'fuse.js'
 
-const mockUsers = Array.from({ length: 9 }, (_, id) => ({
-  id: id + 1,
-  name: `User ${id + 1}`,
-  age: Math.floor(Math.random() * 60) + 18,
-  email: `user${id + 1}@example.com`,
-  address: `123 Street Name, City ${id + 1}`,
-  phone: `555-010${id + 1}`,
-  username: `user${id + 1}`,
-  website: `https://user${id + 1}.example.com`,
-  company: `Company ${id + 1}`,
-  profilePicture: `https://i.pravatar.cc/${id + 1}`,
-}));
+const fuseOptions = {
+	keys: [
+		"name",
+		"email",
+    "phone"
+	]
+};
 
 interface FetchUsersParams {
   search: string;
 }
 
-export function fetchUsers({ search }: FetchUsersParams): Promise<User[]> {
-  return new Promise<Response>((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        ok: true,
-        status: 200,
-        json: async () =>
-          mockUsers.filter((user) => !search || user.name.includes(search)),
-      } as Response);
-    }, 1000);
-  }).then((response) => {
+const endpoint = "https://cd40d1b5-36ed-467a-843a-a9eca07ced34.mock.pstmn.io"
+
+export async function fetchUsers({ search }: FetchUsersParams): Promise<User[]> {
+  return fetch(`${endpoint}/users`).then(async (response) => {
     if (response.ok) {
-      return response.json();
+      const result = await response.json()
+      if(search){
+        const fuse = new Fuse(result, fuseOptions);
+  
+        return fuse.search<User>(search).map((result) => result.item);
+      }
+      return result
     } else {
       throw new Error("Network response was not ok");
     }
-  });
+  })
 }
 
 interface FetchUserParams {
   id: number;
 }
 
-export function fetchUser({ id }: FetchUserParams): Promise<User> {
-  return new Promise<Response>((resolve, reject) => {
-    setTimeout(() => {
-      resolve({
-        ok: true,
-        status: 200,
-        json: async () => mockUsers.find((user) => user.id === id),
-      } as Response);
-    }, 1000);
-  }).then((response) => {
+export async function fetchUser({ id }: FetchUserParams): Promise<User> {
+  return fetch(`${endpoint}/users/${id}`).then((response) => {
     if (response.ok) {
       return response.json();
     } else {

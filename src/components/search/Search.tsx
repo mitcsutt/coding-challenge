@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { ChangeEvent, Dispatch, SetStateAction } from "react";
 import "./Search.css";
 
 interface SearchProps {
@@ -6,13 +6,17 @@ interface SearchProps {
   setSearch: Dispatch<SetStateAction<string>>;
 }
 
-const Search: React.FC<SearchProps> = ({ search, setSearch }) => {
+const Search: React.FC<SearchProps> = ({ setSearch }) => {
+
+  const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  }
+
   return (
     <div className="search-container">
       <input
         type="text"
-        value={search || ""}
-        onChange={(e) => setSearch(e.target.value)}
+        onChange={handleSearch}
         placeholder="Search..."
       />
     </div>
