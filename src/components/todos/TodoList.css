@@ -38,3 +38,14 @@
   background-color: #d4edda;
   text-decoration: line-through;
 }
+
+.todo-text {
+  font-size: 16px;
+  color: #333;
+}
+
+.todo-description {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}

@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useState } from "react";
 import { fetchUser } from "../../api/users";
 import { User } from "../../types/user";
-import { getRandomColor } from "../../utils/color";
 import "./UserCard.css";
 
 interface CardProps {
@@ -26,7 +25,7 @@ const UserCard: React.FC<CardProps> = memo(({ user }) => {
   }, [user.managerId])
 
   return (
-    <div style={{ borderColor: getRandomColor() }} className="card">
+    <div className="card">
       <img
         src={user.profilePicture}
         alt={`${user.name}'s profile`}

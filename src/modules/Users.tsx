@@ -10,7 +10,7 @@ interface UsersProps {
 
 const Users: React.FC<UsersProps> = ({ search }) => {
   const [data, setData] = useState<User[] | null>(null);
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState<null | Error>(null);
 
   useEffect(() => {
